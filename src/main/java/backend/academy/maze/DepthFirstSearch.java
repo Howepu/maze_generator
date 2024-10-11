@@ -43,10 +43,10 @@ public class DepthFirstSearch {
         }
 
         // Рекурсивно исследуем соседние клетки (вниз, вверх, вправо, влево)
-        if (dfs(x + 1, y, endX, endY) || // Вправо
-            dfs(x - 1, y, endX, endY) || // Влево
-            dfs(x, y + 1, endX, endY) || // Вниз
-            dfs(x, y - 1, endX, endY)) { // Вверх
+        if (dfs(x + 1, y, endX, endY)    // Вправо
+            || dfs(x - 1, y, endX, endY) // Влево
+            || dfs(x, y + 1, endX, endY) // Вниз
+            || dfs(x, y - 1, endX, endY)) { // Вверх
             return true; // Если путь найден в любом направлении
         }
 

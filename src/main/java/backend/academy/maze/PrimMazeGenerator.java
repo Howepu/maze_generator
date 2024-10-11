@@ -1,7 +1,6 @@
 package backend.academy.maze;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -34,8 +33,8 @@ public class PrimMazeGenerator implements Generator {
         // Список стен, которые будут добавлены в лабиринт
         List<Edge> walls = new ArrayList<>();
         // Выбор случайной стартовой точки в лабиринте
-        int startX = random.nextInt(height);
-        int startY = random.nextInt(width);
+        int startX = random.nextInt(height - 2) + 1;
+        int startY = random.nextInt(width - 2) + 1;
         // Установка стартовой клетки как прохода
         grid[startX][startY] = new Cell(startX, startY, Cell.Type.PASSAGE);
 
@@ -69,10 +68,22 @@ public class PrimMazeGenerator implements Generator {
         int y = wall.y2(); // Координата y второй клетки стены
 
         // Проверка соседей на наличие проходов
-        if (x > 0 && grid[x - 1][y].type() == Cell.Type.PASSAGE) passages++; // Сосед сверху
-        if (x < grid.length - 1 && grid[x + 1][y].type() == Cell.Type.PASSAGE) passages++; // Сосед снизу
-        if (y > 0 && grid[x][y - 1].type() == Cell.Type.PASSAGE) passages++; // Сосед слева
-        if (y < grid[0].length - 1 && grid[x][y + 1].type() == Cell.Type.PASSAGE) passages++; // Сосед справа
+        // Сосед сверху
+        if (x > 0 && grid[x - 1][y].type() == Cell.Type.PASSAGE) {
+            passages++; // Сосед сверху
+        }
+        // Сосед снизу
+        if (x < grid.length - 1 && grid[x + 1][y].type() == Cell.Type.PASSAGE) {
+            passages++;
+        }
+        // Сосед слева
+        if (y > 0 && grid[x][y - 1].type() == Cell.Type.PASSAGE) {
+            passages++;
+        }
+        // Сосед справа
+        if (y < grid[0].length - 1 && grid[x][y + 1].type() == Cell.Type.PASSAGE) {
+            passages++;
+        }
 
         // Возвращаем true, если есть ровно один проход
         return passages == 1;
@@ -80,9 +91,21 @@ public class PrimMazeGenerator implements Generator {
 
     // Добавление стен вокруг заданной клетки в список стен
     private void addWalls(int x, int y, List<Edge> walls, Cell[][] grid) {
-        if (x > 0) walls.add(new Edge(x, y, x - 1, y)); // Добавление стены сверху
-        if (x < grid.length - 1) walls.add(new Edge(x, y, x + 1, y)); // Добавление стены снизу
-        if (y > 0) walls.add(new Edge(x, y, x, y - 1)); // Добавление стены слева
-        if (y < grid[0].length - 1) walls.add(new Edge(x, y, x, y + 1)); // Добавление стены справа
+        // Добавление стены сверху
+        if (x > 0) {
+            walls.add(new Edge(x, y, x - 1, y));
+        }
+        // Добавление стены снизу
+        if (x < grid.length - 1) {
+            walls.add(new Edge(x, y, x + 1, y));
+        }
+        // Добавление стены слева
+        if (y > 0) {
+            walls.add(new Edge(x, y, x, y - 1));
+        }
+        // Добавление стены справа
+        if (y < grid[0].length - 1) {
+            walls.add(new Edge(x, y, x, y + 1));
+        }
     }
 }
