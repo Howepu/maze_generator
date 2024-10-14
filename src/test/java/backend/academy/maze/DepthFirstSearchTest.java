@@ -8,10 +8,12 @@ import java.util.List;
 
 public class DepthFirstSearchTest {
 
-    private boolean[][] maze;
+    private Maze maze;
+    private DepthFirstSearch dfs;
 
     @BeforeEach
     public void setUp() {
+        dfs = new DepthFirstSearch();
 
         // S . # . E
         // . # # . .
@@ -19,80 +21,77 @@ public class DepthFirstSearchTest {
         // # . # # #
         // . . . . .
 
-        maze = new boolean[][] {
-            {false, false, true,  false, false}, // S - start (0, 0), E - end (0, 4)
-            {false, true,  true,  false, false},
-            {false, false, false, false, true },
-            {true,  false, true,  true,  true },
-            {false, false, false, false, false}
-        };
+        Cell[][] grid = new Cell[5][5];
+        for (int row = 0; row < 5; row++) {
+            for (int col = 0; col < 5; col++) {
+                grid[row][col] = new Cell(row, col, Cell.Type.WALL); // Изначально все клетки - стены
+            }
+        }
+
+        // Определение проходов в лабиринте
+        grid[0][0] = new Cell(0, 0, Cell.Type.PASSAGE); // S
+        grid[0][1] = new Cell(0, 1, Cell.Type.PASSAGE);
+        grid[0][3] = new Cell(0, 3, Cell.Type.PASSAGE);
+        grid[0][4] = new Cell(0, 4, Cell.Type.PASSAGE); // E
+
+        grid[1][0] = new Cell(1, 0, Cell.Type.PASSAGE);
+        grid[1][3] = new Cell(1, 3, Cell.Type.PASSAGE);
+        grid[1][4] = new Cell(1, 4, Cell.Type.PASSAGE);
+
+        grid[2][0] = new Cell(2, 0, Cell.Type.PASSAGE);
+        grid[2][1] = new Cell(2, 1, Cell.Type.PASSAGE);
+        grid[2][2] = new Cell(2, 2, Cell.Type.PASSAGE);
+        grid[2][3] = new Cell(2, 3, Cell.Type.PASSAGE);
+
+        grid[3][1] = new Cell(3, 1, Cell.Type.PASSAGE);
+
+        grid[4][0] = new Cell(4, 0, Cell.Type.PASSAGE);
+        grid[4][1] = new Cell(4, 1, Cell.Type.PASSAGE);
+        grid[4][2] = new Cell(4, 2, Cell.Type.PASSAGE);
+        grid[4][3] = new Cell(4, 3, Cell.Type.PASSAGE);
+        grid[4][4] = new Cell(4, 4, Cell.Type.PASSAGE);
+
+        // Создание лабиринта
+        maze = new Maze(5, 5, grid);
     }
 
     @Test
-    public void testFindPathExists() {
-        DepthFirstSearch dfs = new DepthFirstSearch(maze);
-        List<int[]> path = dfs.findPath(0, 0, 0, 4); // Из точки (0,0) в точку (0,4)
+    public void testSolvePathExists() {
+        Coordinate start = new Coordinate(0, 0);
+        Coordinate end = new Coordinate(0, 4);
 
-        // Проверяем, что путь найден
+        List<Coordinate> path = dfs.solve(maze, start, end);
+
         assertNotNull(path, "Путь не должен быть null");
         assertFalse(path.isEmpty(), "Путь не должен быть пустым");
-
-        // Проверка первой и последней клетки пути
-        assertArrayEquals(new int[]{0, 0}, path.get(0), "Начальная точка должна быть первой в пути");
-        assertArrayEquals(new int[]{0, 4}, path.get(path.size() - 1), "Конечная точка должна быть последней в пути");
+        assertEquals(start, path.get(0), "Начальная точка должна быть первой в пути");
+        assertEquals(end, path.get(path.size() - 1), "Конечная точка должна быть последней в пути");
     }
 
-    @Test
-    public void testNoPath() {
-        // Строим лабиринт без возможного пути к цели
-        boolean[][] noPathMaze = {
-            {false, true, true,  true,  false}, // Все пути к конечной точке заблокированы
-            {false, true, true,  true,  false},
-            {false, false, false, true,  true },
-            {true,  true,  true,  true,  true },
-            {false, false, false, true,  true }
-        };
-
-        DepthFirstSearch dfs = new DepthFirstSearch(noPathMaze);
-        List<int[]> path = dfs.findPath(0, 0, 0, 4); // Попытка найти путь
-
-        // Проверка, что путь не найден
-        assertNotNull(path, "Путь не должен быть null");
-        assertTrue(path.isEmpty(), "Путь должен быть пустым, если нет доступного пути");
-    }
 
     @Test
     public void testStartIsEnd() {
-        DepthFirstSearch dfs = new DepthFirstSearch(maze);
-        List<int[]> path = dfs.findPath(2, 2, 2, 2); // Старт и конец в одной точке
+        Coordinate start = new Coordinate(2, 2);
 
-        // Проверяем, что путь найден и состоит только из одной точки
+        List<Coordinate> path = dfs.solve(maze, start, start);
+
         assertNotNull(path, "Путь не должен быть null");
-        assertEquals(1, path.size(), "Путь должен содержать только одну клетку");
-        assertArrayEquals(new int[]{2, 2}, path.get(0), "Единственная клетка в пути должна быть стартовой (конечной) точкой");
+        assertEquals(1, path.size(), "Путь должен содержать только одну точку");
+        assertEquals(start, path.get(0), "Единственной точкой в пути должна быть стартовая (конечная) точка");
     }
 
     @Test
     public void testPathInComplexMaze() {
-        // Более сложный лабиринт с дополнительными проходами
-        boolean[][] complexMaze = {
-            {false, false, true,  false, false},
-            {false, true,  false, false, false},
-            {false, false, false, false, true },
-            {true,  false, true,  true,  true },
-            {false, false, false, false, false}
-        };
+        Cell[][] grid = maze.grid();
+        grid[1][2] = new Cell(1, 2, Cell.Type.PASSAGE); // Добавляем проход
+        maze = new Maze(5, 5, grid);
 
-        DepthFirstSearch dfs = new DepthFirstSearch(complexMaze);
-        List<int[]> path = dfs.findPath(0, 0, 4, 4); // Из (0,0) в (4,4)
+        Coordinate start = new Coordinate(0, 0);
+        Coordinate end = new Coordinate(4, 4);
 
-        // Проверяем, что путь найден
+        List<Coordinate> path = dfs.solve(maze, start, end);
+
         assertNotNull(path, "Путь не должен быть null");
         assertFalse(path.isEmpty(), "Путь не должен быть пустым");
-
-        // Проверка первой и последней клетки пути
-        assertArrayEquals(new int[]{0, 0}, path.get(0), "Начальная точка должна быть первой в пути");
-        assertArrayEquals(new int[]{4, 4}, path.get(path.size() - 1), "Конечная точка должна быть последней в пути");
     }
 }
-

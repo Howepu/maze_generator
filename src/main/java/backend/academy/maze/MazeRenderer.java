@@ -20,15 +20,20 @@ public class MazeRenderer implements Renderer {
     @Override
     public String render(Maze maze, List<Coordinate> path) {
         StringBuilder sb = new StringBuilder();
-        Set<Coordinate> pathSet = new HashSet<>(path);
+        Set<Coordinate> pathSet = new HashSet<>();
+
+        // Проверка на null перед инициализацией pathSet
+        if (path != null) {
+            pathSet = new HashSet<>(path);
+        }
 
         for (int i = 0; i < maze.height(); i++) {
             for (int j = 0; j < maze.width(); j++) {
                 Coordinate coord = new Coordinate(i, j);
                 if (pathSet.contains(coord)) {
-                    if (coord.equals(path.get(0))) {
+                    if (coord.equals(path != null ? path.get(0) : null)) {
                         sb.append("A"); // Стартовая точка
-                    } else if (coord.equals(path.get(path.size() - 1))) {
+                    } else if (coord.equals(path != null ? path.get(path.size() - 1) : null)) {
                         sb.append("B"); // Конечная точка
                     } else {
                         sb.append("*"); // Путь

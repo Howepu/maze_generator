@@ -57,14 +57,11 @@ public class BreadthFirstSearchTest {
 
     @Test
     public void testSolvePathExists() {
-        // Стартовая и конечная точки
         Coordinate start = new Coordinate(0, 0);
         Coordinate end = new Coordinate(0, 4);
 
-        // Решение лабиринта
         List<Coordinate> path = bfs.solve(maze, start, end);
 
-        // Проверка, что путь найден и содержит правильные координаты
         assertNotNull(path, "Путь не должен быть null");
         assertFalse(path.isEmpty(), "Путь не должен быть пустым");
         assertEquals(start, path.get(0), "Начальная точка должна быть первой в пути");
@@ -73,7 +70,6 @@ public class BreadthFirstSearchTest {
 
     @Test
     public void testNoPath() {
-        // Создание лабиринта с недостижимой конечной точкой
         Cell[][] grid = maze.grid();
         grid[0][4] = new Cell(0, 4, Cell.Type.WALL); // E - теперь стена
         maze = new Maze(5, 5, grid);
@@ -81,22 +77,17 @@ public class BreadthFirstSearchTest {
         Coordinate start = new Coordinate(0, 0);
         Coordinate end = new Coordinate(0, 4);
 
-        // Решение лабиринта
         List<Coordinate> path = bfs.solve(maze, start, end);
 
-        // Проверка, что путь не найден (null)
         assertNull(path, "Путь должен быть null, если нет доступного пути");
     }
 
     @Test
     public void testStartIsEnd() {
-        // Если стартовая точка совпадает с конечной
         Coordinate start = new Coordinate(2, 2);
 
-        // Решение лабиринта
         List<Coordinate> path = bfs.solve(maze, start, start);
 
-        // Проверка, что путь найден и содержит только одну точку
         assertNotNull(path, "Путь не должен быть null");
         assertEquals(1, path.size(), "Путь должен содержать только одну точку");
         assertEquals(start, path.get(0), "Единственной точкой в пути должна быть стартовая (конечная) точка");
@@ -104,18 +95,15 @@ public class BreadthFirstSearchTest {
 
     @Test
     public void testPathInComplexMaze() {
-        // Создаем сложный лабиринт, где BFS должен найти более длинный путь
         Cell[][] grid = maze.grid();
-        grid[1][2] = new Cell(1, 2, Cell.Type.PASSAGE); // Добавляем ещё проход
+        grid[1][2] = new Cell(1, 2, Cell.Type.PASSAGE); // Добавляем проход
         maze = new Maze(5, 5, grid);
 
         Coordinate start = new Coordinate(0, 0);
         Coordinate end = new Coordinate(4, 4);
 
-        // Решение лабиринта
         List<Coordinate> path = bfs.solve(maze, start, end);
 
-        // Проверка, что путь найден
         assertNotNull(path, "Путь не должен быть null");
         assertFalse(path.isEmpty(), "Путь не должен быть пустым");
     }

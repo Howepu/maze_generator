@@ -57,6 +57,15 @@ public class PrimMazeGenerator implements Generator {
             }
         }
 
+        // Обрамление лабиринта стеной
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                if (col == 0 || row == 0 || col == width - 1 || row == height - 1) {
+                    grid[row][col] = new Cell(row, col, Cell.Type.WALL);
+                }
+            }
+        }
+
         // Возвращаем сгенерированный лабиринт
         return new Maze(height, width, grid);
     }
