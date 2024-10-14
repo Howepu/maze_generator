@@ -56,18 +56,41 @@ public class MazeApp {
         List<Coordinate> dfsPath2 = dfsSolver.solve(maze2, new Coordinate(startX, startY), new Coordinate(endX, endY));
 
         // Отображение лабиринта и пути
+// Отображение лабиринта и пути
         Renderer renderer = new MazeRenderer();
         log.info("Сгенерированный лабиринт 1 по алгоритму Краскаля:\n{}", renderer.render(maze1));
         log.info("Сгенерированный лабиринт 2 по алгоритму Прима:\n{}", renderer.render(maze2));
 
-        if (bfsPath1 != null && dfsPath1 != null) {
+// Проверка найденных путей и вывод результатов
+        boolean bfsPath1Exists = bfsPath1 != null && !bfsPath1.isEmpty();
+        boolean bfsPath2Exists = bfsPath2 != null && !bfsPath2.isEmpty();
+        boolean dfsPath1Exists = dfsPath1 != null && !dfsPath1.isEmpty();
+        boolean dfsPath2Exists = dfsPath2 != null && !dfsPath2.isEmpty();
+
+        if (bfsPath1Exists) {
             log.info("Найденный путь в ширину лабиринта 1:\n{}", renderer.render(maze1, bfsPath1));
+        } else {
+            log.info("Путь не найден в ширину для лабиринта 1.");
+        }
+
+        if (dfsPath1Exists) {
             log.info("Найденный путь в глубину лабиринта 1:\n{}", renderer.render(maze1, dfsPath1));
+        } else {
+            log.info("Путь не найден в глубину для лабиринта 1.");
+        }
+
+        if (bfsPath2Exists) {
             log.info("Найденный путь в ширину лабиринта 2:\n{}", renderer.render(maze2, bfsPath2));
+        } else {
+            log.info("Путь не найден в ширину для лабиринта 2.");
+        }
+
+        if (dfsPath2Exists) {
             log.info("Найденный путь в глубину лабиринта 2:\n{}", renderer.render(maze2, dfsPath2));
         } else {
-            log.info("Путь не найден.");
+            log.info("Путь не найден в глубину для лабиринта 2.");
         }
+
     }
 
     // Метод для проверки, является ли строка числом
