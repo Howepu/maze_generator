@@ -66,6 +66,9 @@ public class PrimMazeGenerator implements Generator {
             }
         }
 
+        // Присваиваем редкие типы клеткам-проходам
+        assignRareTiles(grid);
+
         // Возвращаем сгенерированный лабиринт
         return new Maze(height, width, grid);
     }
@@ -115,6 +118,26 @@ public class PrimMazeGenerator implements Generator {
         // Добавление стены справа
         if (y < grid[0].length - 1) {
             walls.add(new Edge(x, y, x, y + 1));
+        }
+    }
+
+    // Присваиваем редкие типы клеткам-проходам
+    private void assignRareTiles(Cell[][] grid) {
+        // Вероятности появления SAND и COIN
+        double sandProbability = 0.05; // 5% вероятность для песка
+        double coinProbability = 0.02; // 2% вероятность для монет
+
+        for (int row = 1; row < grid.length - 1; row++) {
+            for (int col = 1; col < grid[0].length - 1; col++) {
+                if (grid[row][col].type() == Cell.Type.PASSAGE) {
+                    double rand = random.nextDouble();
+                    if (rand < coinProbability) {
+                        grid[row][col] = new Cell(row, col, Cell.Type.COIN);
+                    } else if (rand < sandProbability + coinProbability) {
+                        grid[row][col] = new Cell(row, col, Cell.Type.SAND);
+                    }
+                }
+            }
         }
     }
 }

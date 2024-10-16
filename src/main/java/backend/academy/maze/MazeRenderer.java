@@ -5,12 +5,18 @@ import java.util.List;
 import java.util.Set;
 
 public class MazeRenderer implements Renderer {
+
     @Override
     public String render(Maze maze) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < maze.height(); i++) {
             for (int j = 0; j < maze.width(); j++) {
-                sb.append(maze.grid()[i][j].type() == Cell.Type.WALL ? "#" : " ");
+                switch (maze.grid()[i][j].type()) {
+                    case WALL -> sb.append("#");       // Стены
+                    case PASSAGE -> sb.append(" ");    // Проходы
+                    case SAND -> sb.append("~");       // Песок
+                    case COIN -> sb.append("O");       // Монета
+                }
             }
             sb.append("\n");
         }
@@ -39,7 +45,13 @@ public class MazeRenderer implements Renderer {
                         sb.append("*"); // Путь
                     }
                 } else {
-                    sb.append(maze.grid()[i][j].type() == Cell.Type.WALL ? "#" : " ");
+                    // Отображение в зависимости от типа клетки
+                    switch (maze.grid()[i][j].type()) {
+                        case WALL -> sb.append("#");      // Стены
+                        case PASSAGE -> sb.append(" ");   // Проходы
+                        case SAND -> sb.append("~");      // Песок
+                        case COIN -> sb.append("O");      // Монета
+                    }
                 }
             }
             sb.append("\n");
