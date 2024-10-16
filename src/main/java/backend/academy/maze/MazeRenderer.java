@@ -16,6 +16,7 @@ public class MazeRenderer implements Renderer {
                     case PASSAGE -> sb.append(" ");    // Проходы
                     case SAND -> sb.append("~");       // Песок
                     case COIN -> sb.append("O");       // Монета
+                    default -> sb.append(maze.grid()[i][j]);
                 }
             }
             sb.append("\n");
@@ -51,6 +52,7 @@ public class MazeRenderer implements Renderer {
                         case PASSAGE -> sb.append(" ");   // Проходы
                         case SAND -> sb.append("~");      // Песок
                         case COIN -> sb.append("O");      // Монета
+                        default -> sb.append(maze.grid()[i][j]);
                     }
                 }
             }

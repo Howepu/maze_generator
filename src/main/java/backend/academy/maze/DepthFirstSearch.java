@@ -5,6 +5,9 @@ import java.util.List;
 
 public class DepthFirstSearch implements Solver {
 
+    private final int sand = 3;
+    private final int coin = 0;
+
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
 
@@ -45,10 +48,10 @@ public class DepthFirstSearch implements Solver {
         int currentCost = getCost(maze.grid()[y][x]);
 
         // Рекурсивно проверяем соседние клетки
-        if (dfs(maze, x + currentCost, y, endX, endY, visited, path) || // Вправо
-            dfs(maze, x - currentCost, y, endX, endY, visited, path) || // Влево
-            dfs(maze, x, y + currentCost, endX, endY, visited, path) || // Вниз
-            dfs(maze, x, y - currentCost, endX, endY, visited, path)) {  // Вверх
+        if (dfs(maze, x + currentCost, y, endX, endY, visited, path)     // Вправо
+            || dfs(maze, x - currentCost, y, endX, endY, visited, path)  // Влево
+            || dfs(maze, x, y + currentCost, endX, endY, visited, path)  // Вниз
+            || dfs(maze, x, y - currentCost, endX, endY, visited, path)) {  // Вверх
             return true;
         }
 
@@ -60,9 +63,9 @@ public class DepthFirstSearch implements Solver {
     private int getCost(Cell cell) {
         switch (cell.type()) {
             case SAND:
-                return 3; // Песок
+                return sand; // Песок
             case COIN:
-                return 0; // Монеты
+                return coin; // Монеты
             default:
                 return 1; // Обычные клетки
         }

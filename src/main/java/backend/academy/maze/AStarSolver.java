@@ -1,8 +1,20 @@
 package backend.academy.maze;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Set;
 
 public class AStarSolver implements Solver {
+
+    private final int sand = 3;
+    private final int coin = 0;
+
 
     // Карта для хранения стоимости разных типов клеток
     private final Map<Cell.Type, Integer> movementCost = new HashMap<>();
@@ -11,9 +23,10 @@ public class AStarSolver implements Solver {
         // Задаем стоимость движения по разным типам клеток
         movementCost.put(Cell.Type.PASSAGE, 1); // Проход
         movementCost.put(Cell.Type.WALL, Integer.MAX_VALUE); // Стены — непроходимы
-        movementCost.put(Cell.Type.SAND, 3); // Песок замедляет
-        movementCost.put(Cell.Type.COIN, 0); // Монеты ускоряют
+        movementCost.put(Cell.Type.SAND, sand); // Песок замедляет
+        movementCost.put(Cell.Type.COIN, coin); // Монеты ускоряют
     }
+
 
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
@@ -85,9 +98,13 @@ public class AStarSolver implements Solver {
     private List<Coordinate> reconstructPath(Map<Coordinate, Coordinate> cameFrom, Coordinate current) {
         List<Coordinate> path = new ArrayList<>();
         path.add(current);
-        while (cameFrom.containsKey(current)) {
-            current = cameFrom.get(current);
-            path.add(current);
+
+        // Используем локальную переменную для изменения
+        Coordinate temp = current;
+
+        while (cameFrom.containsKey(temp)) {
+            temp = cameFrom.get(temp);
+            path.add(temp);
         }
         Collections.reverse(path); // Переворачиваем путь
         return path;

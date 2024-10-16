@@ -2,20 +2,27 @@ package backend.academy.maze;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-public class DepthFirstSearchTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+public class AStarSolverTest {
 
     private Maze maze;
-    private DepthFirstSearch dfs;
+    private AStarSolver aStarSolver;
 
     @BeforeEach
     public void setUp() {
-        dfs = new DepthFirstSearch();
+        aStarSolver = new AStarSolver();
 
-        // Создаем лабиринт 5x5 с учетом стен, проходов, песка и монет
+        // Создание лабиринта с песком и монетами
+        // S . S . E
+        // . # # . .
+        // . . . . #
+        // # S # # #
+        // C . . . .
+
         Cell[][] grid = new Cell[5][5];
         for (int row = 0; row < 5; row++) {
             for (int col = 0; col < 5; col++) {
@@ -23,25 +30,23 @@ public class DepthFirstSearchTest {
             }
         }
 
-        // Определяем проходы и добавляем песок и монеты
+        // Определение проходов в лабиринте
         grid[0][0] = new Cell(0, 0, Cell.Type.PASSAGE); // S
-        grid[0][1] = new Cell(0, 1, Cell.Type.SAND); // Песок
+        grid[0][1] = new Cell(0, 1, Cell.Type.SAND); // песок
         grid[0][3] = new Cell(0, 3, Cell.Type.PASSAGE);
         grid[0][4] = new Cell(0, 4, Cell.Type.PASSAGE); // E
 
         grid[1][0] = new Cell(1, 0, Cell.Type.PASSAGE);
-        grid[1][2] = new Cell(1, 2, Cell.Type.PASSAGE); // Добавляем проход
         grid[1][3] = new Cell(1, 3, Cell.Type.PASSAGE);
-        grid[1][4] = new Cell(1, 4, Cell.Type.COIN); // Монеты
+        grid[1][4] = new Cell(1, 4, Cell.Type.PASSAGE);
 
         grid[2][0] = new Cell(2, 0, Cell.Type.PASSAGE);
         grid[2][1] = new Cell(2, 1, Cell.Type.PASSAGE);
         grid[2][2] = new Cell(2, 2, Cell.Type.PASSAGE);
         grid[2][3] = new Cell(2, 3, Cell.Type.PASSAGE);
 
-        grid[3][1] = new Cell(3, 1, Cell.Type.PASSAGE);
-
-        grid[4][0] = new Cell(4, 0, Cell.Type.PASSAGE);
+        grid[3][1] = new Cell(3, 1, Cell.Type.SAND); // песок
+        grid[4][0] = new Cell(4, 0, Cell.Type.COIN); // монета
         grid[4][1] = new Cell(4, 1, Cell.Type.PASSAGE);
         grid[4][2] = new Cell(4, 2, Cell.Type.PASSAGE);
         grid[4][3] = new Cell(4, 3, Cell.Type.PASSAGE);
@@ -52,23 +57,32 @@ public class DepthFirstSearchTest {
     }
 
     @Test
-    public void testSolvePathExists() {
+    public void testSolvePathExistsWithCoinAndSand() {
         Coordinate start = new Coordinate(0, 0);
-        Coordinate end = new Coordinate(0, 4);
+        Coordinate end = new Coordinate(4, 0);
 
-        List<Coordinate> path = dfs.solve(maze, start, end);
+        List<Coordinate> path = aStarSolver.solve(maze, start, end);
 
         assertNotNull(path, "Путь не должен быть null");
         assertFalse(path.isEmpty(), "Путь не должен быть пустым");
         assertEquals(start, path.get(0), "Начальная точка должна быть первой в пути");
         assertEquals(end, path.get(path.size() - 1), "Конечная точка должна быть последней в пути");
+
+        // Проверяем, что путь содержит монету
+        boolean hasCoin = path.stream().anyMatch(coord -> maze.grid()[coord.row()][coord.col()].type() == Cell.Type.COIN);
+
+        assertTrue(hasCoin, "Путь должен содержать клетку с монетой");
+        boolean hasSand = path.stream().anyMatch(coord -> maze.grid()[coord.row()][coord.col()].type() == Cell.Type.SAND);
+
+        assertTrue(hasSand, "Путь должен содержать клетку с песком");
     }
+
 
     @Test
     public void testStartIsEnd() {
         Coordinate start = new Coordinate(2, 2);
 
-        List<Coordinate> path = dfs.solve(maze, start, start);
+        List<Coordinate> path = aStarSolver.solve(maze, start, start);
 
         assertNotNull(path, "Путь не должен быть null");
         assertEquals(1, path.size(), "Путь должен содержать только одну точку");
@@ -77,36 +91,16 @@ public class DepthFirstSearchTest {
 
     @Test
     public void testPathInComplexMaze() {
+        Cell[][] grid = maze.grid();
+        grid[1][2] = new Cell(1, 2, Cell.Type.PASSAGE); // Добавляем проход
+        maze = new Maze(5, 5, grid);
+
         Coordinate start = new Coordinate(0, 0);
         Coordinate end = new Coordinate(4, 4);
 
-        List<Coordinate> path = dfs.solve(maze, start, end);
+        List<Coordinate> path = aStarSolver.solve(maze, start, end);
 
         assertNotNull(path, "Путь не должен быть null");
         assertFalse(path.isEmpty(), "Путь не должен быть пустым");
-    }
-
-    @Test
-    public void testPathWithSand() {
-        Coordinate start = new Coordinate(0, 0);
-        Coordinate end = new Coordinate(0, 1);
-
-        List<Coordinate> path = dfs.solve(maze, start, end);
-
-        assertNotNull(path, "Путь не должен быть null");
-        assertFalse(path.isEmpty(), "Путь не должен быть пустым");
-        assertTrue(path.contains(new Coordinate(0, 1)), "Путь должен содержать клетку с песком");
-    }
-
-    @Test
-    public void testPathWithCoin() {
-        Coordinate start = new Coordinate(0, 0);
-        Coordinate end = new Coordinate(1, 4);
-
-        List<Coordinate> path = dfs.solve(maze, start, end);
-
-        assertNotNull(path, "Путь не должен быть null");
-        assertFalse(path.isEmpty(), "Путь не должен быть пустым");
-        assertTrue(path.contains(new Coordinate(1, 4)), "Путь должен содержать клетку с монетами");
     }
 }

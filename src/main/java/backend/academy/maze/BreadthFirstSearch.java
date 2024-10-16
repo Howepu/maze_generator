@@ -1,8 +1,18 @@
 package backend.academy.maze;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 
 public class BreadthFirstSearch implements Solver {
+
+    private final int sand = 3;
+    private final int coin = 0;
+
 
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
@@ -77,9 +87,9 @@ public class BreadthFirstSearch implements Solver {
     private int getCost(Cell cell) {
         switch (cell.type()) {
             case SAND:
-                return 3; // Песок требует больше шагов (условная высокая стоимость)
+                return sand; // Песок требует больше шагов (условная высокая стоимость)
             case COIN:
-                return 0; // Монета делает движение легче (условная низкая стоимость)
+                return coin; // Монета делает движение легче (условная низкая стоимость)
             default:
                 return 1; // Обычные клетки
         }

@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 @SuppressWarnings("uncommentedmain")
 public class MazeApp {
 
+
     private MazeApp() {
         throw new AssertionError("Не удается создать экземпляр служебного класса");
     }
@@ -55,8 +56,10 @@ public class MazeApp {
 
         // Решение с помощью A*
         Solver aStarSolver = new AStarSolver(); // Создаем экземпляр A*
-        List<Coordinate> aStarPath1 = aStarSolver.solve(maze1, new Coordinate(startX, startY), new Coordinate(endX, endY));
-        List<Coordinate> aStarPath2 = aStarSolver.solve(maze2, new Coordinate(startX, startY), new Coordinate(endX, endY));
+        List<Coordinate> aStarPath1 = aStarSolver.solve(maze1,
+            new Coordinate(startX, startY), new Coordinate(endX, endY));
+        List<Coordinate> aStarPath2 = aStarSolver.solve(maze2,
+            new Coordinate(startX, startY), new Coordinate(endX, endY));
 
         // Отображение лабиринта и пути
         Renderer renderer = new MazeRenderer();
@@ -64,8 +67,8 @@ public class MazeApp {
         log.info("Сгенерированный лабиринт 2 по алгоритму Прима:\n{}", renderer.render(maze2));
 
         // Проверка найденных путей и вывод результатов
-        printSolution(renderer, "BFS", "1", bfsPath1, maze1);
-        printSolution(renderer, "DFS", "1", dfsPath1, maze1);
+        printSolution(renderer, "в ширину", "1", bfsPath1, maze1);
+        printSolution(renderer, "в глубину", "1", dfsPath1, maze1);
         printSolution(renderer, "A*", "1", aStarPath1, maze1);
 
         printSolution(renderer, "BFS", "2", bfsPath2, maze2);
@@ -79,7 +82,8 @@ public class MazeApp {
     }
 
     // Универсальный метод для печати результата
-    private static void printSolution(Renderer renderer, String solverType, String mazeNum, List<Coordinate> path, Maze maze) {
+    private static void printSolution(Renderer renderer,
+        String solverType, String mazeNum, List<Coordinate> path, Maze maze) {
         if (path != null && !path.isEmpty()) {
             log.info("Найденный путь {} лабиринта {}:\n{}", solverType, mazeNum, renderer.render(maze, path));
         } else {

@@ -11,6 +11,8 @@ public class PrimMazeGenerator implements Generator {
     private final int width;
     // Генератор случайных чисел
     private final Random random = new Random();
+    private final double sandChance = 0.05;
+    private final double coinChance = 0.02;
 
     // Конструктор для инициализации высоты и ширины лабиринта
     public PrimMazeGenerator(int height, int width) {
@@ -124,8 +126,8 @@ public class PrimMazeGenerator implements Generator {
     // Присваиваем редкие типы клеткам-проходам
     private void assignRareTiles(Cell[][] grid) {
         // Вероятности появления SAND и COIN
-        double sandProbability = 0.05; // 5% вероятность для песка
-        double coinProbability = 0.02; // 2% вероятность для монет
+        double sandProbability = sandChance; // 5% вероятность для песка
+        double coinProbability = coinChance; // 2% вероятность для монет
 
         for (int row = 1; row < grid.length - 1; row++) {
             for (int col = 1; col < grid[0].length - 1; col++) {

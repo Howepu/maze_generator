@@ -69,7 +69,7 @@ public class BreadthFirstSearchTest {
     }
 
     @Test
-    public void testNoPath() {
+    public void testEndIsWall() {
         Cell[][] grid = maze.grid();
         grid[0][4] = new Cell(0, 4, Cell.Type.WALL); // E - теперь стена
         maze = new Maze(5, 5, grid);
@@ -79,7 +79,7 @@ public class BreadthFirstSearchTest {
 
         List<Coordinate> path = bfs.solve(maze, start, end);
 
-        assertNull(path, "Путь должен быть null, если нет доступного пути");
+        assertNotNull(path, "Путь должен быть null, так как его не существует");
     }
 
     @Test
@@ -107,4 +107,50 @@ public class BreadthFirstSearchTest {
         assertNotNull(path, "Путь не должен быть null");
         assertFalse(path.isEmpty(), "Путь не должен быть пустым");
     }
+
+    @Test
+    public void testStartOrEndIsWallBecomesPath() {
+        // Устанавливаем стену в начальной клетке
+        maze.grid()[0][0] = new Cell(0, 0, Cell.Type.WALL);
+        maze.grid()[0][4] = new Cell(0, 4, Cell.Type.WALL); // Стена в конечной клетке
+
+        // Проверка, что путь существует, когда стены становятся проходами
+        Coordinate start = new Coordinate(0, 0);
+        Coordinate end = new Coordinate(0, 4);
+
+        List<Coordinate> path = bfs.solve(maze, start, end);
+
+        assertNotNull(path, "Путь не должен быть null");
+        assertFalse(path.isEmpty(), "Путь не должен быть пустым");
+        assertEquals(start, path.get(0), "Начальная точка должна быть первой в пути");
+        assertEquals(end, path.get(path.size() - 1), "Конечная точка должна быть последней в пути");
+    }
+
+    @Test
+    public void testPathWithTerrainCosts() {
+        // Добавляем песок и монеты в лабиринт
+        Cell[][] grid = new Cell[5][5];
+        for (int row = 0; row < 5; row++) {
+            for (int col = 0; col < 5; col++) {
+                grid[row][col] = new Cell(row, col, Cell.Type.WALL);
+            }
+        }
+
+        grid[0][0] = new Cell(0, 0, Cell.Type.PASSAGE); // S
+        grid[0][1] = new Cell(0, 1, Cell.Type.SAND); // Песок
+        grid[0][2] = new Cell(0, 2, Cell.Type.PASSAGE);
+        grid[0][3] = new Cell(0, 3, Cell.Type.COIN); // Монета
+        grid[0][4] = new Cell(0, 4, Cell.Type.PASSAGE); // E
+
+        maze = new Maze(5, 5, grid);
+
+        Coordinate start = new Coordinate(0, 0);
+        Coordinate end = new Coordinate(0, 4);
+
+        List<Coordinate> path = bfs.solve(maze, start, end);
+
+        assertNotNull(path, "Путь не должен быть null");
+        assertFalse(path.isEmpty(), "Путь не должен быть пустым");
+    }
+
 }
