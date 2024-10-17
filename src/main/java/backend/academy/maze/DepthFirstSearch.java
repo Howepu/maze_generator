@@ -1,70 +1,56 @@
 package backend.academy.maze;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class DepthFirstSearch implements Solver {
-
-    private final int sand = 3;
-    private final int coin = 0;
+public class DepthFirstSearch extends AbstractSolver {
 
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
-
-        // Если стартовая клетка - стена, делаем её проходом
-        AbstractSolver.isValidStartAndEnd(maze, start, end);
+        // Используем общий метод для проверки стартовой и конечной клетки
+        isValidStartAndEnd(maze, start, end);
 
         boolean[][] visited = new boolean[maze.height()][maze.width()];
         List<Coordinate> path = new ArrayList<>();
 
         // Начальный вызов DFS
-        if (dfs(maze, start.row(), start.col(), end.row(), end.col(), visited, path)) {
-            return path;
+        if (dfs(maze, start, end, visited, path)) {
+            return path; // Путь уже в правильном порядке
         }
-        return new ArrayList<>(); // Путь не найден
+        return Collections.emptyList(); // Путь не найден
     }
 
-    // Рекурсивный DFS с учётом стоимости
-    private boolean dfs(Maze maze, int x, int y, int endX, int endY, boolean[][] visited, List<Coordinate> path) {
-        if (!isInBounds(x, y, maze) || visited[y][x] || maze.grid()[y][x].type() == Cell.Type.WALL) {
+    // Рекурсивный DFS
+    private boolean dfs(Maze maze, Coordinate current, Coordinate end, boolean[][] visited, List<Coordinate> path) {
+        int row = current.row();
+        int col = current.col();
+
+        if (!isInBounds(maze, current) || visited[row][col] || maze.grid()[row][col].type() == Cell.Type.WALL) {
             return false; // Выход за границы или стена
         }
 
-        visited[y][x] = true;
-        path.add(new Coordinate(x, y));
+        visited[row][col] = true;
+        path.add(current);
 
-        if (x == endX && y == endY) {
+        if (current.equals(end)) {
             return true; // Целевая клетка найдена
         }
 
-        // Учитываем стоимость движения
-        int currentCost = getCost(maze.grid()[y][x]);
-
-        // Рекурсивно проверяем соседние клетки
-        if (dfs(maze, x + currentCost, y, endX, endY, visited, path)     // Вправо
-            || dfs(maze, x - currentCost, y, endX, endY, visited, path)  // Влево
-            || dfs(maze, x, y + currentCost, endX, endY, visited, path)  // Вниз
-            || dfs(maze, x, y - currentCost, endX, endY, visited, path)) {  // Вверх
-            return true;
+        for (Coordinate neighbor : getNeighbors(maze, current)) {
+            if (dfs(maze, neighbor, end, visited, path)) {
+                return true;
+            }
         }
 
         path.remove(path.size() - 1); // Убираем клетку из пути
         return false;
     }
 
-    // Получаем стоимость клетки
-    private int getCost(Cell cell) {
-        switch (cell.type()) {
-            case SAND:
-                return sand; // Песок
-            case COIN:
-                return coin; // Монеты
-            default:
-                return 1; // Обычные клетки
-        }
-    }
-
-    private boolean isInBounds(int x, int y, Maze maze) {
-        return x >= 0 && x < maze.width() && y >= 0 && y < maze.height();
+    private boolean isInBounds(Maze maze, Coordinate coord) {
+        int row = coord.row();
+        int col = coord.col();
+        return row >= 0 && row < maze.height() && col >= 0 && col < maze.width();
     }
 }
+

@@ -10,29 +10,13 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-public class AStarSolver implements Solver {
-
-    private final int sand = 3;
-    private final int coin = 0;
-
-
-    // Карта для хранения стоимости разных типов клеток
-    private final Map<Cell.Type, Integer> movementCost = new HashMap<>();
-
-    public AStarSolver() {
-        // Задаем стоимость движения по разным типам клеток
-        movementCost.put(Cell.Type.PASSAGE, 1); // Проход
-        movementCost.put(Cell.Type.WALL, Integer.MAX_VALUE); // Стены — непроходимы
-        movementCost.put(Cell.Type.SAND, sand); // Песок замедляет
-        movementCost.put(Cell.Type.COIN, coin); // Монеты ускоряют
-    }
-
+public class AStarSolver extends AbstractSolver {
 
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
 
-        // Если стартовая клетка - стена, делаем её проходом
-        AbstractSolver.isValidStartAndEnd(maze, start, end);
+        // Используем общий метод для проверки стартовой и конечной клетки
+        isValidStartAndEnd(maze, start, end);
 
         // Множество для хранения уже обработанных клеток
         Set<Coordinate> closedSet = new HashSet<>();
@@ -101,33 +85,6 @@ public class AStarSolver implements Solver {
         }
         Collections.reverse(path); // Переворачиваем путь
         return path;
-    }
-
-    // Получение соседних клеток (с проверкой, чтобы они не были стенами)
-    private List<Coordinate> getNeighbors(Maze maze, Coordinate coord) {
-        List<Coordinate> neighbors = new ArrayList<>();
-        int row = coord.row();
-        int col = coord.col();
-
-        if (row > 0 && maze.grid()[row - 1][col].type() != Cell.Type.WALL) {
-            neighbors.add(new Coordinate(row - 1, col));
-        }
-        if (row < maze.height() - 1 && maze.grid()[row + 1][col].type() != Cell.Type.WALL) {
-            neighbors.add(new Coordinate(row + 1, col));
-        }
-        if (col > 0 && maze.grid()[row][col - 1].type() != Cell.Type.WALL) {
-            neighbors.add(new Coordinate(row, col - 1));
-        }
-        if (col < maze.width() - 1 && maze.grid()[row][col + 1].type() != Cell.Type.WALL) {
-            neighbors.add(new Coordinate(row, col + 1));
-        }
-
-        return neighbors;
-    }
-
-    // Получение стоимости передвижения по клетке
-    private int movementCost(Maze maze, Coordinate coord) {
-        return movementCost.getOrDefault(maze.grid()[coord.row()][coord.col()].type(), 1);
     }
 
     // Вспомогательный класс для работы с приоритетной очередью
