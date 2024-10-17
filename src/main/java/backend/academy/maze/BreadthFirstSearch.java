@@ -16,7 +16,7 @@ public class BreadthFirstSearch implements Solver {
 
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
-        // Если стартовая клетка - стена, делаем её проходом
+        // Если стартовая клетка - стена, делаем её проходом.
         if (maze.grid()[start.row()][start.col()].type() == Cell.Type.WALL) {
             maze.grid()[start.row()][start.col()] = new Cell(start.row(), start.col(), Cell.Type.PASSAGE);
         }
