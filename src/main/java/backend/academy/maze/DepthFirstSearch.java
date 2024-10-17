@@ -12,14 +12,7 @@ public class DepthFirstSearch implements Solver {
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
 
         // Если стартовая клетка - стена, делаем её проходом
-        if (maze.grid()[start.row()][start.col()].type() == Cell.Type.WALL) {
-            maze.grid()[start.row()][start.col()] = new Cell(start.row(), start.col(), Cell.Type.PASSAGE);
-        }
-
-        // Если конечная клетка - стена, делаем её проходом
-        if (maze.grid()[end.row()][end.col()].type() == Cell.Type.WALL) {
-            maze.grid()[end.row()][end.col()] = new Cell(end.row(), end.col(), Cell.Type.PASSAGE);
-        }
+        AbstractSolver.isValidStartAndEnd(maze, start, end);
 
         boolean[][] visited = new boolean[maze.height()][maze.width()];
         List<Coordinate> path = new ArrayList<>();
