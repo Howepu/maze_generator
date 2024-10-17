@@ -21,7 +21,7 @@ public class MazeApp {
         String input = scanner.nextLine().trim(); // Убираем лишние пробелы
         String[] parts = input.split(" ");
 
-        // Проверка на наличие двух элементов и корректность введённых данных
+        // Проверка на наличие двух элементов и корректность введённых данных.
         if (parts.length != 2 || !isValidNumber(parts[0]) || !isValidNumber(parts[1])) {
             log.info("Ошибка ввода: введите два корректных числа через пробел.");
             return; // Завершаем программу, если ввод некорректен
