@@ -46,11 +46,6 @@ public class MazeApp {
         int endX = scanner.nextInt();
         int endY = scanner.nextInt();
 
-        if (!isValidCoordinates(startX, startY, height, width) || !isValidCoordinates(endX, endY, height, width)) {
-            log.info("Координаты введены некорректно");
-            return;
-        }
-
         // Поиск пути
         Solver bfsSolver = new BreadthFirstSearch();
         List<Coordinate> bfsPath1 = bfsSolver.solve(maze1, new Coordinate(startX, startY), new Coordinate(endX, endY));
@@ -96,11 +91,5 @@ public class MazeApp {
             log.info("Путь не найден для лабиринта {} с использованием {}.", mazeNum, solverType);
         }
     }
-
-    private static boolean isValidCoordinates(int start, int end, int height, int width) {
-        if (start >= 0 && start <= height && start <= width && end >= 0 && end <= width && end <= height) {
-            return true;
-        }
-        return false;
-    }
 }
+
