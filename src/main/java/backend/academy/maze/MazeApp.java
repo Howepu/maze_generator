@@ -36,6 +36,7 @@ public class MazeApp {
         Maze maze1 = generator1.generate(height, width);
         Maze maze2 = generator2.generate(height, width);
 
+
         // Ввод начальной и конечной точек
         log.info("Введите стартовую точку (x y): ");
         int startX = scanner.nextInt();
@@ -44,6 +45,11 @@ public class MazeApp {
         log.info("Введите конечную точку (x y): ");
         int endX = scanner.nextInt();
         int endY = scanner.nextInt();
+
+        if (!isValidCoordinates(startX, startY, height, width) || !isValidCoordinates(endX, endY, height, width)) {
+            log.info("Координаты введены некорректно");
+            return;
+        }
 
         // Поиск пути
         Solver bfsSolver = new BreadthFirstSearch();
@@ -89,5 +95,12 @@ public class MazeApp {
         } else {
             log.info("Путь не найден для лабиринта {} с использованием {}.", mazeNum, solverType);
         }
+    }
+
+    private static boolean isValidCoordinates(int start, int end, int height, int width) {
+        if (start >= 0 && start <= height && start <= width && end >= 0 && end <= width && end <= height) {
+            return true;
+        }
+        return false;
     }
 }

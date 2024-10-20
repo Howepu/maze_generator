@@ -17,11 +17,11 @@ public class AStarSolverTest {
         aStarSolver = new AStarSolver();
 
         // Создание лабиринта с песком и монетами
-        // S . S . E
+        // S . S . .
         // . # # . .
         // . . . . #
         // # S # # #
-        // C . . . .
+        // E C . . .
 
         Cell[][] grid = new Cell[5][5];
         for (int row = 0; row < 5; row++) {
@@ -31,10 +31,10 @@ public class AStarSolverTest {
         }
 
         // Определение проходов в лабиринте
-        grid[0][0] = new Cell(0, 0, Cell.Type.PASSAGE); // S
-        grid[0][1] = new Cell(0, 1, Cell.Type.SAND); // песок
+        grid[0][0] = new Cell(0, 0, Cell.Type.PASSAGE); // start
+        grid[0][1] = new Cell(0, 1, Cell.Type.SAND);
         grid[0][3] = new Cell(0, 3, Cell.Type.PASSAGE);
-        grid[0][4] = new Cell(0, 4, Cell.Type.PASSAGE); // E
+        grid[0][4] = new Cell(0, 4, Cell.Type.PASSAGE);
 
         grid[1][0] = new Cell(1, 0, Cell.Type.PASSAGE);
         grid[1][3] = new Cell(1, 3, Cell.Type.PASSAGE);
@@ -45,9 +45,9 @@ public class AStarSolverTest {
         grid[2][2] = new Cell(2, 2, Cell.Type.PASSAGE);
         grid[2][3] = new Cell(2, 3, Cell.Type.PASSAGE);
 
-        grid[3][1] = new Cell(3, 1, Cell.Type.SAND); // песок
-        grid[4][0] = new Cell(4, 0, Cell.Type.COIN); // монета
-        grid[4][1] = new Cell(4, 1, Cell.Type.PASSAGE);
+        grid[3][1] = new Cell(3, 1, Cell.Type.SAND);
+        grid[4][0] = new Cell(4, 0, Cell.Type.PASSAGE); // end
+        grid[4][1] = new Cell(4, 1, Cell.Type.COIN);
         grid[4][2] = new Cell(4, 2, Cell.Type.PASSAGE);
         grid[4][3] = new Cell(4, 3, Cell.Type.PASSAGE);
         grid[4][4] = new Cell(4, 4, Cell.Type.PASSAGE);
