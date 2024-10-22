@@ -1,6 +1,6 @@
 package backend.academy.maze;
 
-import backend.academy.maze.*;
+import backend.academy.maze.generators.KruskalMazeGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,7 +15,7 @@ public class KruskalMazeGeneratorTest {
     public void setUp() {
         height = 5;
         width = 5;
-        KruskalMazeGenerator generator = new KruskalMazeGenerator(height, width);
+        KruskalMazeGenerator generator = new KruskalMazeGenerator();
         maze = generator.generate(height, width);
     }
 

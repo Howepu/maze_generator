@@ -1,5 +1,9 @@
-package backend.academy.maze;
+package backend.academy.maze.renderers;
 
+import backend.academy.maze.Cell;
+import backend.academy.maze.CellType;
+import backend.academy.maze.Coordinate;
+import backend.academy.maze.Maze;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,13 +15,8 @@ public class MazeRenderer implements Renderer {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < maze.height(); i++) {
             for (int j = 0; j < maze.width(); j++) {
-                switch (maze.grid()[i][j].type()) {
-                    case WALL -> sb.append("#");       // Стены
-                    case PASSAGE -> sb.append(" ");    // Проходы
-                    case SAND -> sb.append("~");       // Песок
-                    case COIN -> sb.append("O");       // Монета
-                    default -> sb.append(maze.grid()[i][j]);
-                }
+                Cell cell = maze.grid()[i][j];
+                sb.append(getCellRepresentation(cell));
             }
             sb.append("\n");
         }
@@ -47,17 +46,31 @@ public class MazeRenderer implements Renderer {
                     }
                 } else {
                     // Отображение в зависимости от типа клетки
-                    switch (maze.grid()[i][j].type()) {
-                        case WALL -> sb.append("#");      // Стены
-                        case PASSAGE -> sb.append(" ");   // Проходы
-                        case SAND -> sb.append("~");      // Песок
-                        case COIN -> sb.append("O");      // Монета
-                        default -> sb.append(maze.grid()[i][j]);
-                    }
+                    Cell cell = maze.grid()[i][j];
+                    sb.append(getCellRepresentation(cell));
                 }
             }
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    private String getCellRepresentation(Cell cell) {
+        switch (cell.type()) {
+            case WALL -> {
+                return CellType.WALL.getRepresentation(); // Стены
+            }
+            case PASSAGE -> {
+                return CellType.PASSAGE.getRepresentation(); // Проходы
+            }
+            case SAND -> {
+                return CellType.SAND.getRepresentation(); // Песок
+            }
+            case COIN -> {
+                return CellType.COIN.getRepresentation(); // Монета
+            }
+            default ->
+                throw new IllegalArgumentException("Неизвестный тип клетки: " + cell.type());
+        }
     }
 }

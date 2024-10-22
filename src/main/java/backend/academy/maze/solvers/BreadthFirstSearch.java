@@ -1,5 +1,7 @@
-package backend.academy.maze;
+package backend.academy.maze.solvers;
 
+import backend.academy.maze.Coordinate;
+import backend.academy.maze.Maze;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

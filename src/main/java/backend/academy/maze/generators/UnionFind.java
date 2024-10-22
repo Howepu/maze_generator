@@ -1,4 +1,4 @@
-package backend.academy.maze;
+package backend.academy.maze.generators;
 
 public class UnionFind {
     private final int[] parent;

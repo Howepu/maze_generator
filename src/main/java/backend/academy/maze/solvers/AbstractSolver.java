@@ -1,10 +1,12 @@
-package backend.academy.maze;
+package backend.academy.maze.solvers;
 
+import backend.academy.maze.Cell;
+import backend.academy.maze.Coordinate;
+import backend.academy.maze.Maze;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 public abstract class AbstractSolver implements Solver {
 
@@ -25,10 +27,10 @@ public abstract class AbstractSolver implements Solver {
     // Проверка и изменение стартовой и конечной клетки
     protected void isValidStartAndEnd(Maze maze, Coordinate start, Coordinate end) {
         if (maze.grid()[start.row()][start.col()].type() == Cell.Type.WALL) {
-            maze.grid()[start.row()][start.col()] = new Cell(start.row(), start.col(), Cell.Type.PASSAGE);
+            maze.grid()[start.row()][start.col()] = new Cell(start, Cell.Type.PASSAGE);
         }
         if (maze.grid()[end.row()][end.col()].type() == Cell.Type.WALL) {
-            maze.grid()[end.row()][end.col()] = new Cell(end.row(), end.col(), Cell.Type.PASSAGE);
+            maze.grid()[end.row()][end.col()] = new Cell(end, Cell.Type.PASSAGE);
         }
     }
 

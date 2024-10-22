@@ -1,5 +1,9 @@
-package backend.academy.maze;
+package backend.academy.maze.generators;
 
+
+import backend.academy.maze.Cell;
+import backend.academy.maze.Coordinate;
+import backend.academy.maze.Maze;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -28,7 +32,7 @@ public class PrimMazeGenerator implements Generator {
         // Инициализация всех клеток как стен
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
-                grid[row][col] = new Cell(row, col, Cell.Type.WALL);
+                grid[row][col] = new Cell(new Coordinate(row, col), Cell.Type.WALL);
             }
         }
 
@@ -38,7 +42,7 @@ public class PrimMazeGenerator implements Generator {
         int startX = random.nextInt(height - 2) + 1;
         int startY = random.nextInt(width - 2) + 1;
         // Установка стартовой клетки как прохода
-        grid[startX][startY] = new Cell(startX, startY, Cell.Type.PASSAGE);
+        grid[startX][startY] = new Cell(new Coordinate(startX, startY), Cell.Type.PASSAGE);
 
         // Добавление стен вокруг стартовой клетки
         addWalls(startX, startY, walls, grid);
@@ -53,7 +57,7 @@ public class PrimMazeGenerator implements Generator {
             // Если вторая клетка является стеной и имеет только одного соседа-прохода
             if (grid[x][y].type() == Cell.Type.WALL && hasSinglePassageNeighbor(grid, wall)) {
                 // Превращаем стену в проход
-                grid[x][y] = new Cell(x, y, Cell.Type.PASSAGE);
+                grid[x][y] = new Cell(new Coordinate(x, y), Cell.Type.PASSAGE);
                 // Добавляем стены вокруг новой проходной клетки
                 addWalls(x, y, walls, grid);
             }
@@ -63,7 +67,7 @@ public class PrimMazeGenerator implements Generator {
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
                 if (col == 0 || row == 0 || col == width - 1 || row == height - 1) {
-                    grid[row][col] = new Cell(row, col, Cell.Type.WALL);
+                    grid[row][col] = new Cell(new Coordinate(row, col), Cell.Type.WALL);
                 }
             }
         }
@@ -134,9 +138,9 @@ public class PrimMazeGenerator implements Generator {
                 if (grid[row][col].type() == Cell.Type.PASSAGE) {
                     double rand = random.nextDouble();
                     if (rand < coinProbability) {
-                        grid[row][col] = new Cell(row, col, Cell.Type.COIN);
+                        grid[row][col] = new Cell(new Coordinate(row, col), Cell.Type.COIN);
                     } else if (rand < sandProbability + coinProbability) {
-                        grid[row][col] = new Cell(row, col, Cell.Type.SAND);
+                        grid[row][col] = new Cell(new Coordinate(row, col), Cell.Type.SAND);
                     }
                 }
             }
