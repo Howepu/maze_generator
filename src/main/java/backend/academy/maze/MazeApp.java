@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MazeApp {
 
     private MazeApp() {
-        throw new AssertionError("Не удается создать экземпляр служебного класса");
+        throw new AssertionError("Не удается создать экземпляр служебного класса!");
     }
 
     public static void main(String[] args) {
