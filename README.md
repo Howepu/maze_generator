@@ -1,4 +1,4 @@
-# maze_generator - Jaza maze generator and path finder
+# maze_generator - maze generator and path finder
 
 [Академии Бэкенда 2024][course-url].
 
